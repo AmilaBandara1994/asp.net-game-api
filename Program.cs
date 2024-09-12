@@ -30,7 +30,10 @@ List<GameDto> games =[
 app.MapGet("games", () => games );
 
 // Get /games/1
-app.MapGet("games/{id}", (int id)=> games.Find(game => game.Id ==id))
+app.MapGet("games/{id}", (int id)=>{
+    GameDto? game  =  games.Find(game => game.Id ==id);
+    return game is null ? Results.NotFound() : Results.Ok(game); 
+    })
     .WithName(GetGameEndpointName);
 
 // Post /games
@@ -47,5 +50,34 @@ app.MapPost("games", (CreateGameDto newGame)=>{
 
     return Results.CreatedAtRoute(GetGameEndpointName, new {id = game.Id}, game);
 });
+
+// Put /games/1
+
+app.MapPut("games/{id}", (int id, UpdateGameDto updateGameDto)=>{
+    var index = games.FindIndex(game=> game.Id == id);
+    if(index == -1){
+        return Results.NotFound();
+    }
+
+    games[index] = new GameDto(
+        id,
+        updateGameDto.Name,
+        updateGameDto.Genre,
+        updateGameDto.Price,
+        updateGameDto.ReleaseDate
+    );
+
+    return Results.NoContent();
+
+});
+
+// Delete / games/1
+
+app.MapDelete("games/{id}" , (int id) =>{
+    games.RemoveAll(game=> game.Id == id);
+
+    return Results.NoContent();
+});
+
 
 app.Run();

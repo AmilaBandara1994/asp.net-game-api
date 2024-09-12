@@ -1,0 +1,23 @@
+GET http://localhost:5265/games
+
+###
+# get by id
+GET http://localhost:5265/games/2
+
+###
+
+GET http://localhost:5265/games/4
+
+###
+
+POST http://localhost:5265/games
+Content-Type: application/json
+
+{
+    "name": "Far-Cry",
+    "genre": "Adults",
+    "price": 203.93,
+    "releaseDate": "2014-12-02"
+}
+
+
